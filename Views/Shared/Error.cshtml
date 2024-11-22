@@ -3,23 +3,57 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<!-- Container to center the error message -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Card for the error message -->
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Oops! Something went wrong.</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">An error occurred while processing your request.</h5>
+                        <p>Sorry for the inconvenience, we are working on fixing this issue.</p>
+                    </div>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+                    @if (Model.ShowRequestId)
+                    {
+                        <div class="mb-3">
+                            <strong>Request ID:</strong>
+                            <code>@Model.RequestId</code>
+                        </div>
+                    }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+                    <div class="mt-4">
+                        <h5 class="text-muted">Development Mode</h5>
+                        <p class="text-muted">
+                            Swapping to <strong>Development</strong> environment will display more detailed information about the error.
+                        </p>
+                        <p class="text-muted">
+                            <strong>Warning:</strong> The Development environment shouldn't be enabled for deployed applications, as it can reveal sensitive information.
+                        </p>
+                        <p class="text-muted">
+                            For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong> and restarting the app.
+                        </p>
+                    </div>
+                </div>
+                <!-- Footer with some padding -->
+                <div class="card-footer text-center">
+                    <p class="mb-0 text-muted">Please contact support if the issue persists.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: You can add some styling in the style section -->
+<style>
+    .card-header {
+        border-radius: 5px 5px 0 0;
+    }
+    .card-footer {
+        border-radius: 0 0 5px 5px;
+    }
+</style>
