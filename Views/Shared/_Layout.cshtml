@@ -15,7 +15,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -46,61 +48,31 @@
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
-        <li class="nav-item dropdown pe-3">
-            Sign In
-        </li>
-        <li class="nav-item dropdown pe-3">
 
-          <a class="nav-li nk nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
-
-          @* if user is login then this area need to see *@
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle"></i> <!-- Bootstrap Icon -->
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+              @(@User.Identity!.IsAuthenticated ? User.Identity.Name : "")
+            </span>
+          </a>
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
-            </li>
             <li>
-              <hr class="dropdown-divider">
-            </li>
+              @if (User?.Identity?.IsAuthenticated ?? false)
+              {
+                <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Auth" asp-action="Logout">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              }
+              else
+              {
+                <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Auth" asp-action="Login">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Login</span>
+                </a>
+              }
 
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
             </li>
 
           </ul><!-- End Profile Dropdown Items -->
@@ -110,32 +82,54 @@
     </nav><!-- End Icons Navigation -->
   </header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+  @if (User!.Identity.IsAuthenticated)
+  {
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        @if (User.IsInRole("Admin"))
+        {
+          <li class="nav-item">
+            <a class="nav-link ">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
 
-    <ul class="sidebar-nav" id="sidebar-nav">
+          <!-- End Dashboard Nav -->
+          <li class="nav-item">
+            <a class="nav-link ">
+              <i class="bi bi-person-square"></i>
+              <span>User Manage</span>
+            </a>
+          </li>
 
-      <li class="nav-item">
-        <a class="nav-link " href="">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      <li class="nav-item">
-        <a class="nav-link " href="">
-          <i class="bi bi-receipt"></i>
-          <span>Entry Page</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      <li class="nav-item">
-        <a class="nav-link " href="">
-          <i class="bi bi-person-square"></i>
-          <span>User Manage</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-    </ul>
+          <!-- End User Manage Nav -->
+        }
+        else
+        {
+          <li class="nav-item">
+            <a class="nav-link">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
 
-  </aside><!-- End Sidebar-->
+          <!-- End Dashboard Nav -->
+          <li class="nav-item">
+            <a class="nav-link">
+              <i class="bi bi-receipt"></i>
+              <span>Entry Page</span>
+            </a>
+          </li>
+
+          <!-- End Dashboard Nav -->
+        }
+      </ul>
+    </aside>
+
+    <!-- End Sidebar -->
+  }
 
   <main id="main" class="main">
     @RenderBody()
@@ -148,8 +142,22 @@
     </div>
   </footer>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+  <script>
+    @if (TempData["Success"] != null)
+    {
+      <text>
+          toastr.success('@TempData["Success"]');
+      </text>
+    }
+    @if (TempData["Error"] != null)
+    {
+      <text>
+          toastr.error('@TempData["Error"]');
+      </text>
+    }
+  </script>
   <!-- Vendor JS Files -->
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
   <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -167,4 +175,5 @@
   <script src="~/js/site.js" asp-append-version="true"></script>
   @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

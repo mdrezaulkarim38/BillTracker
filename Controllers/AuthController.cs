@@ -23,10 +23,14 @@ public class AuthController : Controller
     [HttpGet("Login")]
     public IActionResult Login()
     {
+        if (User.FindFirst("Name")?.Value != null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (ModelState.IsValid)
@@ -47,51 +51,54 @@ public class AuthController : Controller
 
                 var authProperties = new AuthenticationProperties
                 {
-                    IsPersistent = true, 
+                    IsPersistent = true,
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
+                TempData["ToastrMessage"] = "Login successful!";
+                TempData["ToastrType"] = "success";
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid email, password, or inactive account.");
+                TempData["ToastrMessage"] = "Invalid email, password, or inactive account.";
+                TempData["ToastrType"] = "error";
             }
+        }
+        else
+        {
+            TempData["ToastrMessage"] = "Please fill in all required fields.";
+            TempData["ToastrType"] = "error";
         }
 
         return View(model);
     }
 
-    // Logout
-    [HttpPost]
+    [HttpGet("Logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Login");
+        return RedirectToAction("Login", "Auth");
     }
 
     // Forgot Password GET
-    [HttpGet]
+    [HttpGet("ForgotPassword")]
     public IActionResult ForgotPassword()
     {
         return View();
     }
 
     // Forgot Password POST
-    [HttpPost]
+    [HttpPost("ForgotPassword")]
     public IActionResult ForgotPassword(string email)
     {
         var user = _context.Users.SingleOrDefault(u => u.Email == email);
 
         if (user != null)
         {
-            // Generate password reset link
             var resetLink = Url.Action("ResetPassword", "Account", new { email = email }, Request.Scheme);
-
-            // Send email (implement an email service to send this)
-            // EmailService.SendEmail(user.Email, "Reset Password", $"Click <a href='{resetLink}'>here</a> to reset your password.");
 
             ViewBag.Message = "Password reset link has been sent to your email.";
         }
@@ -104,14 +111,14 @@ public class AuthController : Controller
     }
 
     // Reset Password GET
-    [HttpGet]
+    [HttpGet("ResetPassword")]
     public IActionResult ResetPassword(string email)
     {
         return View(new ResetPasswordViewModel { Email = email });
     }
 
     // Reset Password POST
-    [HttpPost]
+    [HttpPost("ResetPassword")]
     public IActionResult ResetPassword(ResetPasswordViewModel model)
     {
         if (ModelState.IsValid)
@@ -119,7 +126,7 @@ public class AuthController : Controller
             var user = _context.Users.SingleOrDefault(u => u.Email == model.Email);
             if (user != null)
             {
-                user.Password = model.NewPassword; // Hash the password in production
+                user.Password = model.NewPassword;
                 _context.SaveChanges();
 
                 ViewBag.Message = "Password reset successfully!";
@@ -130,6 +137,7 @@ public class AuthController : Controller
     }
 
 
+    [HttpGet("Error")]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
