@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
-
+// Database Connection
+builder.Services.AddDbContext<BillTrackerContext>()
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
