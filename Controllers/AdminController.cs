@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BillTracker.Controllers;
 [Route("[controller]")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
     private readonly ILogger<AdminController> _logger;
