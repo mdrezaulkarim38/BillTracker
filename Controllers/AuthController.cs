@@ -56,21 +56,22 @@ public class AuthController : Controller
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
-
-                TempData["ToastrMessage"] = "Login successful!";
-                TempData["ToastrType"] = "success";
-                return RedirectToAction("Index", "Home");
+                TempData["SuccessMessage"] = "Login successful!";
+                if(user.Role == "Admin")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                return RedirectToAction("Index", "User");
+                
             }
             else
             {
-                TempData["ToastrMessage"] = "Invalid email, password, or inactive account.";
-                TempData["ToastrType"] = "error";
+                TempData["ErrorMessage"] = "Invalid email, password, or inactive account.";
             }
         }
         else
         {
-            TempData["ToastrMessage"] = "Please fill in all required fields.";
-            TempData["ToastrType"] = "error";
+            TempData["ErrorMessage"] = "Please fill in all required fields.";
         }
 
         return View(model);
@@ -80,6 +81,7 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        TempData["SuccessMessage"] = "Logout successful!";
         return RedirectToAction("Login", "Auth");
     }
 

@@ -144,20 +144,7 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
-  <script>
-    @if (TempData["Success"] != null)
-    {
-      <text>
-          toastr.success('@TempData["Success"]');
-      </text>
-    }
-    @if (TempData["Error"] != null)
-    {
-      <text>
-          toastr.error('@TempData["Error"]');
-      </text>
-    }
-  </script>
+  
   <!-- Vendor JS Files -->
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
   <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -173,6 +160,25 @@
   <script src="~/assets/js/main.js"></script>
   <script src="~/js/toastr.min.js"></script>
   <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                    toastr.success("@TempData["SuccessMessage"]");
+                </text>
+            }
+            
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                    toastr.error("@TempData["ErrorMessage"]");
+                </text>
+            }
+        });
+    </script>
+
+  
   @await RenderSectionAsync("Scripts", required: false)
 </body>
 
