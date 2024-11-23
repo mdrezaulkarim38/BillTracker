@@ -39,7 +39,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a asp-area="" asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center">
+      <a  class="logo d-flex align-items-center">
         <img src="~/assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Bill Tracker</span>
       </a>
@@ -90,7 +90,7 @@
         @if (User.IsInRole("Admin"))
         {
           <li class="nav-item">
-            <a class="nav-link ">
+            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">
               <i class="bi bi-grid"></i>
               <span>Dashboard</span>
             </a>
@@ -98,7 +98,7 @@
 
           <!-- End Dashboard Nav -->
           <li class="nav-item">
-            <a class="nav-link ">
+            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="UserManage">
               <i class="bi bi-person-square"></i>
               <span>User Manage</span>
             </a>
@@ -109,7 +109,7 @@
         else
         {
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">
               <i class="bi bi-grid"></i>
               <span>Dashboard</span>
             </a>
@@ -117,7 +117,7 @@
 
           <!-- End Dashboard Nav -->
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" asp-area="" asp-controller="User" asp-action="EntryPage">
               <i class="bi bi-receipt"></i>
               <span>Entry Page</span>
             </a>
