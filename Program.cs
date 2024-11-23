@@ -2,8 +2,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
+
 // Database Connection
-builder.Services.AddDbContext<BillTrackerContext>()
+builder.Services.AddDbContext<BillTrackerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Authentication 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+    options.Cookie.Name = "UserLoginCookie";
+    options.LoginPath = "/Auth/Login";
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -22,6 +30,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
