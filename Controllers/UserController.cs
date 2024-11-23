@@ -24,6 +24,12 @@ public class UserController : Controller
         return View();
     }
 
+    [HttpGet("EntryPage")]
+    public IActionResult EntryPage()
+    {
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [HttpGet("Error")]
     public IActionResult Error()

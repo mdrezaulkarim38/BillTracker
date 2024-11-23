@@ -25,6 +25,12 @@ public class AdminController : Controller
         return View();
     }
 
+    [HttpGet("UserManage")]
+    public IActionResult UserManage()
+    {
+        return View();
+    }
+
     [HttpGet("Error")]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
