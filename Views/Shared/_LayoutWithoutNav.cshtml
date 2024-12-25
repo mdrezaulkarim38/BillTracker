@@ -12,23 +12,13 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            @RenderBody()
-        </div>
-        <div class="card-footer bg-light text-center py-3">
-            <p class="mb-2 small text-muted">&copy; 2024 - <span class="fw-bold text-primary">BillTracker</span></p>
-            <p class="mb-0">
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none me-3">
-                    Privacy Policy
-                </a>
-                <a href="mailto:support@billtracker.com" class="text-muted text-decoration-none">
-                    Contact Us
-                </a>
-            </p>
-        </div>
-    </div>
+    @RenderBody()
 </div>
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; @DateTime.Now.Year - Bill Tracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
 
 
 <script src="~/libs/jquery/dist/jquery.min.js"></script>
