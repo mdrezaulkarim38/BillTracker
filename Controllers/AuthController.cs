@@ -35,8 +35,8 @@ public class AuthController : Controller
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.FullName),
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.FullName ?? "Unknown"),
+                    new Claim(ClaimTypes.Email, user.Email ?? "unknown@example.com"),
                     new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -52,6 +52,7 @@ public class AuthController : Controller
     }
 
     [HttpPost("Logout")]
+    [HttpGet("Logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
