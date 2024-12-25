@@ -25,6 +25,9 @@ public class AuthController : Controller
         return View();
     }
 
+    [HttpGet("ResetPassword")]
+    public IActionResult ResetPassword() => View();
+
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {

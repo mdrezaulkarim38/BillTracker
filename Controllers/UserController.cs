@@ -17,7 +17,11 @@ public class UserController : Controller
 
     [HttpGet("Dashboard")]
     public IActionResult Dashboard() => View();
+
     [HttpGet("ProductEntry")]
     public IActionResult ProductEntry() => View();
+
+    [HttpGet("Profile")]
+    public IActionResult Profile() => View();
 }
 
