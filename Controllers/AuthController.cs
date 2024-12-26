@@ -1,8 +1,5 @@
-using System.Security.Claims;
-using BillTracker.Data;
+using BillTracker.Interfaces;
 using BillTracker.Models.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
@@ -11,12 +8,12 @@ namespace BillTracker.Controllers;
 public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
-    private readonly ApplicationDbContext _context;
+    private readonly IAuthService _authService;
 
-    public AuthController(ILogger<AuthController> logger, ApplicationDbContext context)
+    public AuthController(ILogger<AuthController> logger, IAuthService authService)
     {
         _logger = logger;
-        _context = context;
+        _authService = authService;
     }
 
     [HttpGet("Login")]
@@ -25,40 +22,27 @@ public class AuthController : Controller
         return View();
     }
 
-    [HttpGet("ResetPassword")]
-    public IActionResult ResetPassword() => View();
-
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == model.Password);
-            if (user != null)
+            var loginSuccess = await _authService.Login(model);
+            if (loginSuccess)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.FullName ?? "Unknown"),
-                    new Claim(ClaimTypes.Email, user.Email ?? "unknown@example.com"),
-                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
-                };
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                TempData["SuccessMessage"] = "Login successful!";
                 return RedirectToAction("Index", "Home");
             }
-
-            ModelState.AddModelError(string.Empty, "Invalid login attemt");
+            TempData["ErrorMessage"] = "Login Unsuccessful!.Try again";
         }
 
         return View(model);
     }
 
-    [HttpPost("Logout")]
     [HttpGet("Logout")]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await _authService.Logout();
         return RedirectToAction("Login", "Auth");
     }
 }
