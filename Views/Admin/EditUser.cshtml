@@ -1,0 +1,39 @@
+@model BillTracker.Models.ViewModels.EditUserViewModel
+
+<div class="container my-5">
+    <h2>Edit User</h2>
+    <a asp-action="UserManage" asp-controller="Admin" class="btn btn-sm btn-secondary">Back To User List</a>
+    <form asp-action="EditUserSave" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="FullName" class="form-label">Full Name</label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Password" class="form-label">New Password</label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Enter new password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="IsAdmin" class="form-check-input" />
+            <label asp-for="IsAdmin" class="form-check-label">Is Admin</label>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="IsActive" class="form-check-input" />
+            <label asp-for="IsActive" class="form-check-label">Is Active</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

@@ -65,5 +65,32 @@ public class AdminController : Controller
         }
     }
 
+    [HttpPost("EditUser")]
+    public async Task<IActionResult> EditUserSave(EditUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                await _adminService.EditUserSave(model);
+                return RedirectToAction("UserManage");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        // If ModelState is invalid, log errors for debugging
+        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+        {
+            // Log or inspect error.ErrorMessage
+            Console.WriteLine(error.ErrorMessage);
+        }
+
+        return View(model);
+    }
+
+
 }
 

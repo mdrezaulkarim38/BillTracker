@@ -7,4 +7,5 @@ public interface IAdminService
     Task AddUser(AddUserViewModel model);
     Task ToggleUserStatus(int userId);
     Task<EditUserViewModel> GetEditData(int userId);
+    Task EditUserSave(EditUserViewModel model);
 }
