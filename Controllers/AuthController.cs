@@ -30,10 +30,9 @@ public class AuthController : Controller
             var loginSuccess = await _authService.Login(model);
             if (loginSuccess)
             {
-                TempData["SuccessMessage"] = "Login successful!";
                 return RedirectToAction("Index", "Home");
             }
-            TempData["ErrorMessage"] = "Login Unsuccessful!.Try again";
+            ModelState.AddModelError(string.Empty, "Invalid login attempt");
         }
 
         return View(model);
