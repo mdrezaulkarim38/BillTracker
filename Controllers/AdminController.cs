@@ -1,4 +1,4 @@
-using BillTracker.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
@@ -6,17 +6,13 @@ namespace BillTracker.Controllers;
 [Route("[controller]")]
 public class AdminController : Controller
 {
-    private readonly ILogger<AdminController> _logger;
-    private readonly ApplicationDbContext _context;
-
-    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
-
     [HttpGet("Dashboard")]
-    public IActionResult Dashboard() => View();
+    public IActionResult Dashboard()
+    {
+        var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        ViewData["username"] = userName;
+        return View();
+    }
 
     [HttpGet("UserManage")]
     public IActionResult UserManage() => View();
