@@ -29,4 +29,39 @@ public class AdminService : IAdminService
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<User>> GetAllUsers()
+    {
+        return await _context.Users.ToListAsync();
+    }
+
+    public async Task ToggleUserStatus(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user != null)
+        {
+            user.IsActive = !user.IsActive; // Toggle status
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<EditUserViewModel> GetEditData(int userId)
+    {
+        var user = await _context.Users.FindAsync(userId); 
+        if (user == null)
+        {
+            throw new KeyNotFoundException("User not found");
+        }
+        var model = new EditUserViewModel
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Password = user.Password,
+            IsAdmin = user.IsAdmin,
+            IsActive = user.IsActive
+        };
+        return model;
+    }
+
 }

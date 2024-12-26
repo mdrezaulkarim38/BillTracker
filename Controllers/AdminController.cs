@@ -24,20 +24,46 @@ public class AdminController : Controller
     }
 
     [HttpGet("UserManage")]
-    public IActionResult UserManage() => View();
+    public async Task<IActionResult> UserManage()
+    {
+        var users = await _adminService.GetAllUsers();
+        return View(users);
+    }
 
     [HttpGet("AddUser")]
     public IActionResult AddUser() => View();
 
     [HttpPost("AddUser")]
-    public async Task<IActionResult> AddUser(AddUserViewModel model) 
+    public async Task<IActionResult> AddUser(AddUserViewModel model)
     {
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
-           await _adminService.AddUser(model);
-           return RedirectToAction("AddUser");
+            await _adminService.AddUser(model);
+            return RedirectToAction("AddUser");
         }
         return View(model);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ToggleUserStatus(int id)
+    {
+        await _adminService.ToggleUserStatus(id);
+        return RedirectToAction("UserManage");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditUser(int id)
+    {
+        try
+        {
+            var model = await _adminService.GetEditData(id);
+            return View(model);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
 }
 
