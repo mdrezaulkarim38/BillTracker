@@ -1,12 +1,20 @@
 using System.Security.Claims;
 using BillTracker.Models.ViewModels;
+using BillTracker.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BillTracker.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class AdminController : Controller
 {
+    private readonly IAdminService _adminService;
+    public AdminController(IAdminService adminService)
+    {
+        _adminService = adminService;
+    }
     [HttpGet("Dashboard")]
     public IActionResult Dashboard()
     {
@@ -26,9 +34,10 @@ public class AdminController : Controller
     {
         if(ModelState.IsValid)
         {
-           
+           await _adminService.AddUser(model);
+           return RedirectToAction("AddUser");
         }
-        return RedirectToAction("AddUser");
+        return View(model);
     }
 }
 

@@ -1,8 +1,10 @@
 using BillTracker.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class UserController : Controller
 {
