@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BillTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
@@ -16,5 +17,18 @@ public class AdminController : Controller
 
     [HttpGet("UserManage")]
     public IActionResult UserManage() => View();
+
+    [HttpGet("AddUser")]
+    public IActionResult AddUser() => View();
+
+    [HttpPost("AddUser")]
+    public async Task<IActionResult> AddUser(AddUserViewModel model) 
+    {
+        if(ModelState.IsValid)
+        {
+           
+        }
+        return RedirectToAction("AddUser");
+    }
 }
 

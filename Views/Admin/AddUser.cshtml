@@ -1,0 +1,50 @@
+@model BillTracker.Models.User
+
+@{
+    ViewData["Title"] = "Add User";
+}
+
+<div class="container my-5">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+
+    <form asp-action="AddUser" method="post">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="FullName" class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="col-md-6">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Is Admin -->
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="form-check">
+                    <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsAdmin" class="form-check-label">Is Admin</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary w-100">Add User</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
