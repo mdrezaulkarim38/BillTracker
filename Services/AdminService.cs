@@ -56,8 +56,8 @@ public class AdminService : IAdminService
         var model = new EditUserViewModel
         {
             Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email,
+            FullName = user.FullName!,
+            Email = user.Email!,
             Password = user.Password,
             IsAdmin = user.IsAdmin,
             IsActive = user.IsActive
