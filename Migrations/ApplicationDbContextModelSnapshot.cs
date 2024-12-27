@@ -21,6 +21,60 @@ namespace BillTracker.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BillTracker.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BillAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BillDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BillNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Challan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChallanDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ItemKey")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PoNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuantityReceived")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SubmitDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniqueBillId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("BillTracker.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +101,22 @@ namespace BillTracker.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BillTracker.Models.Product", b =>
+                {
+                    b.HasOne("BillTracker.Models.User", "User")
+                        .WithMany("Products")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BillTracker.Models.User", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
