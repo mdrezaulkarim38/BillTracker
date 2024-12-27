@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BillTracker.Data;
 using BillTracker.Interfaces;
+using BillTracker.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,23 @@ public class UserController : Controller
     {
         await _userService.DeleteRequest(id);
         return RedirectToAction("Dashboard");
+    }
+
+    [HttpPost("ProductEntry")]
+    public async Task<IActionResult> ProductEntry(Product model)
+    {
+        model.Status = true;
+        model.UserId = int.Parse(User.FindFirst("UserId").Value);
+        try
+        {
+            await _userService.SaveProduct(model);
+            return RedirectToAction("Dashboard");
+        }
+        catch (Exception e)
+        {
+            return View("ProductEntry", model);
+        }
+        
     }
 }
 

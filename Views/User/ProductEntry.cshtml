@@ -1,5 +1,122 @@
+@model BillTracker.Models.Product
 @{
     ViewData["Title"] = "Product Entry";
 }
 
-<h1>This is Product Entry</h1>
+<div class="container my-5">
+    <h1 class="mb-4">Product Entry</h1>
+    <form asp-action="ProductEntry" method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="UniqueBillId" class="form-label">Unique Bill ID</label>
+                <input asp-for="UniqueBillId" type="text" class="form-control" id="UniqueBillId" name="UniqueBillId" placeholder="Enter Unique Bill ID" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="PoNo" class="form-label">PO Number</label>
+                <input asp-for="PoNo" type="text" class="form-control" id="PoNo" name="PoNo" placeholder="Enter PO Number" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="BillNo" class="form-label">Bill Number</label>
+                <input asp-for="BillNo" type="text" class="form-control" id="BillNo" name="BillNo" placeholder="Enter Bill Number" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="BillDate" class="form-label">Bill Date</label>
+                <input asp-for="BillDate" type="date" class="form-control" id="BillDate" name="BillDate" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="BillAmount" class="form-label">Bill Amount</label>
+                <input asp-for="BillAmount" type="number" step="0.01" class="form-control" id="BillAmount" name="BillAmount" placeholder="Enter Bill Amount" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Challan" class="form-label">Challan</label>
+                <input asp-for="Challan" type="text" class="form-control" id="Challan" name="Challan" placeholder="Enter Challan" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="ChallanDate" class="form-label">Challan Date</label>
+                <input asp-for="ChallanDate" type="date" class="form-control" id="ChallanDate" name="ChallanDate" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="QuantityReceived" class="form-label">Quantity Received</label>
+                <input asp-for="QuantityReceived" type="number" class="form-control" id="QuantityReceived" name="QuantityReceived" placeholder="Enter Quantity Received" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" id="Description" name="Description" rows="3" placeholder="Enter Product Description"></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="ItemKey" class="form-label">Item Key</label>
+                <input asp-for="ItemKey" type="number" class="form-control" id="ItemKey" name="ItemKey" placeholder="Enter Item Key" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SubmitDate" class="form-label">Submit Date</label>
+                <input asp-for="SubmitDate" type="date" class="form-control" id="SubmitDate" name="SubmitDate" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input asp-for="QrCode" type="text" class="form-control" id="QrCode" style="display: none;" />
+                <button type="button" id="generateQrCode" class="btn btn-primary mt-2">Generate QR Code</button>
+            </div>
+            <div class="col-md-6">
+                <div id="qrCodePreview" class="mb-3 text-center"></div>
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Save Product</button>
+            <a asp-controller="User" asp-action="Dashboard" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        document.getElementById("generateQrCode").addEventListener("click", function () {
+            const uniqueId = document.getElementById("UniqueBillId").value;
+            const poNo = document.getElementById("PoNo").value;
+            const billNo = document.getElementById("BillNo").value;
+            const billDate = document.getElementById("BillDate").value;
+            const billAmount = document.getElementById("BillAmount").value;
+
+            if (!uniqueId || !poNo || !billNo || !billDate || !billAmount) {
+                alert("Please fill out all required fields before generating a QR code.");
+                return;
+            }
+
+            const qrData = `
+Unique ID: ${uniqueId}
+PO No: ${poNo}
+Bill No: ${billNo}
+Bill Date: ${billDate}
+Bill Amount: ${billAmount}`;
+
+            // Generate QR Code
+            QRCode.toDataURL(qrData, { width: 200 }, function (err, url) {
+                if (err) {
+                    console.error("Error generating QR code:", err);
+                    return;
+                }
+                document.getElementById("QrCode").value = qrData;
+                document.getElementById("qrCodePreview").innerHTML = `<img src="${url}" alt="QR Code" />`;
+            });
+        });
+    </script>
+
+}

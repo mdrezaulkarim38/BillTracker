@@ -14,6 +14,12 @@ public class UserService : IUserService
         _context = context;
     }
 
+    public async Task SaveProduct(Product product)
+    {
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<Product>> GetAllProducts(int userId)
     {
         return await _context.Products.Where(product => product.UserId == userId).ToListAsync(); 
