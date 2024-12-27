@@ -44,7 +44,7 @@ public class AdminController : Controller
         return View(model);
     }
 
-    [HttpPost]
+    [HttpPost("ToggleUserStatus")]
     public async Task<IActionResult> ToggleUserStatus(int id)
     {
         await _adminService.ToggleUserStatus(id);
@@ -68,29 +68,15 @@ public class AdminController : Controller
     [HttpPost("EditUser")]
     public async Task<IActionResult> EditUserSave(EditUserViewModel model)
     {
-        if (ModelState.IsValid)
+        try
         {
-            try
-            {
-                await _adminService.EditUserSave(model);
-                return RedirectToAction("UserManage");
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            await _adminService.EditUserSave(model);
+            return RedirectToAction("UserManage");
         }
-
-        // If ModelState is invalid, log errors for debugging
-        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+        catch (KeyNotFoundException)
         {
-            // Log or inspect error.ErrorMessage
-            Console.WriteLine(error.ErrorMessage);
+            return NotFound();
         }
-
-        return View(model);
     }
-
-
 }
 

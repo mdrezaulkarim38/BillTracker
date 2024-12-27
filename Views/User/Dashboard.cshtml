@@ -1,5 +1,68 @@
+@model IEnumerable<BillTracker.Models.Product>
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<h1>This is User Dashboard</h1>
+<div class="container my-5">
+    <div class="row mb-3">
+        <div class="col">
+            <h3>User Dashboard</h3>
+        </div>
+        <div class="col text-end">
+            <a asp-controller="User" asp-action="ProductEntry" class="btn btn-sm btn-primary">Add New Product</a>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Unique Bill ID</th>
+            <th>Po No</th>
+            <th>Bill No</th>
+            <th>Bill Date</th>
+            <th>Challan</th>
+            <th>Challan Date</th>
+            <th>Bill Amount</th>
+            <th>Submit Date</th>
+            <th>Status</th>
+            <th>Delete Request</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="11" class="text-center">No Product found.</td>
+            </tr>
+        }
+        else
+        {
+            int index = 1;
+            foreach (var product in Model)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@product.UniqueBillId</td>
+                    <td>@product.PoNo</td>
+                    <td>@product.BillNo</td>
+                    <td>@product.BillDate</td>
+                    <td>@product.Challan</td>
+                    <td>@product.ChallanDate</td>
+                    <td>@product.BillAmount</td>
+                    <td>@product.SubmitDate</td>
+                    <td>@product.Status</td>
+                    <td>
+                        <form asp-action="DeleteRequest" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@product.Id" />
+                            <button type="submit" class="btn btn-sm @((product.RequestForDeletion ? "btn-danger" : "btn-success"))">
+                                @(product.RequestForDeletion ? "Deactivate" : "Activate")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+        </tbody>
+    </table>
+</div>

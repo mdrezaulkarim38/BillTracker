@@ -35,13 +35,12 @@ public class AdminService : IAdminService
     {
         return await _context.Users.ToListAsync();
     }
-    [HttpPost("ToggleUserStatus/{id}")]
     public async Task ToggleUserStatus(int userId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user != null)
         {
-            user.IsActive = !user.IsActive; // Toggle status
+            user.IsActive = !user.IsActive;
             await _context.SaveChangesAsync();
         }
     }
@@ -72,20 +71,15 @@ public class AdminService : IAdminService
         {
             throw new KeyNotFoundException("User not found");
         }
-
-        // Update the properties
         user.FullName = model.FullName;
         user.Email = model.Email;
         user.IsAdmin = model.IsAdmin;
         user.IsActive = model.IsActive;
-
-        // Update password only if provided
+        
         if (!string.IsNullOrWhiteSpace(model.Password))
         {
-            user.Password = model.Password; // Ensure password is hashed if needed
+            user.Password = model.Password; 
         }
-
-        // Save changes to the database
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }

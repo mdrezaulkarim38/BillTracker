@@ -25,6 +25,7 @@ public class AuthService : IAuthService
         {
             var claims = new List<Claim>
             {
+                new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.FullName ?? "Unknown"),
                 new Claim(ClaimTypes.Email, user.Email ?? "unknown@example.com"),
                 new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")

@@ -15,6 +15,8 @@ public class Product
     public string? Description { get; set; }
     public int ItemKey { get; set; }
     public string? SubmitDate { get; set; }
+    public bool RequestForDeletion { get; set; }
+    public string? QrCode { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
 }

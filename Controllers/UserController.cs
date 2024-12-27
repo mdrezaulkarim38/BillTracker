@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using BillTracker.Data;
+using BillTracker.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,22 +10,31 @@ namespace BillTracker.Controllers;
 [Route("[controller]")]
 public class UserController : Controller
 {
-    private readonly ILogger<UserController> _logger;
-    private readonly ApplicationDbContext _context;
-
-    public UserController(ILogger<UserController> logger, ApplicationDbContext context)
+    private readonly IUserService _userService;
+    public UserController(IUserService userService)
     {
-        _logger = logger;
-        _context = context;
+       _userService = userService;
     }
 
     [HttpGet("Dashboard")]
-    public IActionResult Dashboard() => View();
+    public async Task<IActionResult> Dashboard()
+    {
+        var userId = int.Parse(User.FindFirst("UserId").Value);
+        var products = await _userService.GetAllProducts(userId);
+        return View(products);
+    }
 
     [HttpGet("ProductEntry")]
     public IActionResult ProductEntry() => View();
 
     [HttpGet("Profile")]
     public IActionResult Profile() => View();
+
+    [HttpPost("DeleteRequest")]
+    public async Task<IActionResult> DeleteRequest(int id)
+    {
+        await _userService.DeleteRequest(id);
+        return RedirectToAction("Dashboard");
+    }
 }
 

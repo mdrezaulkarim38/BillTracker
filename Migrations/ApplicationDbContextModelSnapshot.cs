@@ -30,6 +30,7 @@ namespace BillTracker.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("BillAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("BillDate")
@@ -53,8 +54,14 @@ namespace BillTracker.Migrations
                     b.Property<string>("PoNo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("QrCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("QuantityReceived")
                         .HasColumnType("int");
+
+                    b.Property<bool>("RequestForDeletion")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
