@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using BillTracker.Models.ViewModels;
 using BillTracker.Interfaces;
 using Microsoft.AspNetCore.Mvc;

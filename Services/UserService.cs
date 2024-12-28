@@ -2,7 +2,6 @@ using BillTracker.Data;
 using BillTracker.Models;
 using BillTracker.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using BillTracker.Services;
 namespace BillTracker.Services;
 public class UserService : IUserService
 {

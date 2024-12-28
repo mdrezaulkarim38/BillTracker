@@ -1,5 +1,6 @@
 using BillTracker.Interfaces;
 using BillTracker.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
@@ -43,5 +44,26 @@ public class AuthController : Controller
     {
         await _authService.Logout();
         return RedirectToAction("Login", "Auth");
+    }
+    
+    [Authorize]
+    [HttpGet("ResetPassword")]
+    public IActionResult ResetPassword() =>  View();
+
+    [Authorize]
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword(string email, string newPassword)
+    {
+        var userId = int.Parse(User.FindFirst("UserId")!.Value);
+        var result = await _authService.ResetPassword(email, newPassword, userId); 
+        if (result)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Failed to reset password.");
+            return View(); 
+        }
     }
 }

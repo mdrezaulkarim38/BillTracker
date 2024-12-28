@@ -11,16 +11,20 @@ public class AuthService : IAuthService
 {
     private readonly ApplicationDbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly BaseService _baseService;
 
     public AuthService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _httpContextAccessor = httpContextAccessor;
+        _baseService = new BaseService();
     }
 
     public async Task<bool> Login(LoginViewModel model)
     {
-        var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == model.Password && u.IsActive);
+        var passwordEncrypt = _baseService.Encrypt(model.Password);
+        
+        var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == passwordEncrypt && u.IsActive);
         if (user != null)
         {
             var claims = new List<Claim>
@@ -47,5 +51,17 @@ public class AuthService : IAuthService
         {
             await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
+    }
+    
+    public async Task<bool> ResetPassword(string email, string newPassword, int userId)
+    {
+        var user = _context.Users.SingleOrDefault(u => u.Email == email && u.Id == userId);
+        if (user != null)
+        {
+            user.Password = _baseService.Encrypt(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }

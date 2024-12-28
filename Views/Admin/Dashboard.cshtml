@@ -21,7 +21,7 @@
             <th>Submit By</th>
             <th>QR Code</th>
             <th>Status</th>
-            <th>Delete</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -97,18 +97,18 @@
                         }
                     </td>
                     <td>
-                        @if (product.Status)
-                        {
-                            <span class="badge bg-success"></span>
-                        }
-                        else
+                        @if (product.RequestForDeletion && !product.Status)
                         {
                             <form asp-action="DeleteProduct" method="post" class="d-inline">
                                 <input type="hidden" name="id" value="@product.Id"/>
                                 <button type="submit" class="btn btn-sm btn-danger">
-                                    Delete
+                                    Request For Delete
                                 </button>
                             </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success"></span>
                         }
                     </td>
                 </tr>
