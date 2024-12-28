@@ -73,8 +73,7 @@ BillTracker
 │   ├── libs
 │   └── scss
 ├── appsettings.json
-├── Program.cs
-└── Startup.cs
+└── Program.cs
 ```
 
 ## Installation
