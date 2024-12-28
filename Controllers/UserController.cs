@@ -1,5 +1,6 @@
-using System.Security.Claims;
+using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text;
 using BillTracker.Data;
 using BillTracker.Interfaces;
@@ -14,6 +15,7 @@ namespace BillTracker.Controllers;
 public class UserController : Controller
 {
     private readonly IUserService _userService;
+    private const string EncryptionKey = "71f60f58d1041de0dce012155e5a85f599ab7f712cc25cb7c1a3806a4275a370";
     public UserController(IUserService userService)
     {
        _userService = userService;
@@ -24,6 +26,13 @@ public class UserController : Controller
     {
         var userId = int.Parse(User.FindFirst("UserId").Value);
         var products = await _userService.GetAllProducts(userId);
+        foreach (var product in products)
+        {
+            if (!string.IsNullOrEmpty(product.QrCode))
+            {
+                product.QrCode = Decrypt(product.QrCode);
+            }
+        }
         return View(products);
     }
 
@@ -48,7 +57,7 @@ public class UserController : Controller
         if (model.QrCode != null)
         {
             string convertString = model.QrCode;
-            string newString = Converter(convertString);
+            string newString = Encrypt(convertString);
             model.QrCode = newString;
             
         }
@@ -64,17 +73,36 @@ public class UserController : Controller
         
     }
 
-    public string Converter(string rawString)
+    public string Encrypt(string plainText)
     {
-        using (SHA256 sha256Hash = SHA256.Create())
+        using (Aes aes = Aes.Create())
         {
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawString));
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
+            aes.Key = Encoding.UTF8.GetBytes(EncryptionKey.PadRight(32).Substring(0, 32));
+            aes.IV = new byte[16];
+
+            var memoryStream = new MemoryStream();
+            using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+            using (var writer = new StreamWriter(cryptoStream))
             {
-                builder.Append(bytes[i].ToString("x2"));
+                writer.Write(plainText);
             }
-            return builder.ToString();
+            return Convert.ToBase64String(memoryStream.ToArray());
+        }
+    }
+
+
+    public string Decrypt(string cipherText)
+    {
+        using (Aes aes = Aes.Create())
+        {
+            aes.Key = Encoding.UTF8.GetBytes(EncryptionKey.PadRight(32).Substring(0, 32));
+            aes.IV = new byte[16];
+            var memoryStream = new MemoryStream(Convert.FromBase64String(cipherText));
+            using (var cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+            using (var reader = new StreamReader(cryptoStream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }
