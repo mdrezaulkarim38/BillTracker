@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BillTracker.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("[controller]")]
 public class AdminController : Controller
 {
@@ -16,11 +16,10 @@ public class AdminController : Controller
         _adminService = adminService;
     }
     [HttpGet("Dashboard")]
-    public IActionResult Dashboard()
+    public async Task<IActionResult> Dashboard()
     {
-        var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-        ViewData["username"] = userName;
-        return View();
+        var products = await _adminService.GetAllProducts();
+        return View(products);
     }
 
     [HttpGet("UserManage")]
@@ -78,5 +77,28 @@ public class AdminController : Controller
             return NotFound();
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ApproveProduct(int id, decimal approvedAmount)
+    {
+        try
+        {
+            await _adminService.ApprovedProduct(id, approvedAmount);
+            return RedirectToAction("Dashboard");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [HttpPost("DeleteProduct")]
+    public IActionResult DeleteProduct(int id)
+    {
+        var result = _adminService.DeleteProduct(id);
+        return RedirectToAction("Dashboard");
+    }
+    
 }
 

@@ -18,8 +18,7 @@ public class UserService : IUserService
     {
         if (product.QrCode != null)
         {
-            string qrCode = product.QrCode;
-            product.QrCode = _baseService.Encrypt(qrCode);
+            product.QrCode = _baseService.Encrypt(product.QrCode);
         }
         _context.Products.Add(product);
         await _context.SaveChangesAsync();

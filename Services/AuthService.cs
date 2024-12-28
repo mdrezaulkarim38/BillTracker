@@ -20,7 +20,7 @@ public class AuthService : IAuthService
 
     public async Task<bool> Login(LoginViewModel model)
     {
-        var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+        var user = _context.Users.SingleOrDefault(u => u.Email == model.Email && u.Password == model.Password && u.IsActive);
         if (user != null)
         {
             var claims = new List<Claim>

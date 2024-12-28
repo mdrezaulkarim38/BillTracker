@@ -10,10 +10,12 @@ namespace BillTracker.Services;
 public class AdminService : IAdminService
 {
     private readonly ApplicationDbContext _context;
+    private readonly BaseService _baseService;
 
     public AdminService(ApplicationDbContext context)
     {
         _context = context;
+        _baseService = new BaseService();
     }
 
     public async Task AddUser(AddUserViewModel model)
@@ -84,4 +86,49 @@ public class AdminService : IAdminService
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Product>> GetAllProducts()
+    {
+        var products = await _context.Products
+            .Include(p => p.User) 
+            .ToListAsync();
+        
+        foreach (var product in products)
+        {
+            if (!string.IsNullOrEmpty(product.QrCode))
+            {
+                product.QrCode = _baseService.Decrypt(product.QrCode);
+            }
+        }
+        return products;
+    }
+
+    public bool DeleteProduct(int productId)
+    {
+        var product = _context.Products.Find(productId);
+        if (product != null)
+        {
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
+    public async Task ApprovedProduct(int productId, decimal approvedAmount)
+    {
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+        if (product == null)
+        {
+            throw new Exception("Product not found.");
+        }
+
+        if (approvedAmount <= 0 || approvedAmount > product.BillAmount)
+        {
+            throw new ArgumentException("Invalid approved amount.");
+        }
+
+        product.ApprovedAmount = approvedAmount;
+        product.Status = true;
+        await _context.SaveChangesAsync();
+    }
 }

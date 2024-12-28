@@ -17,6 +17,7 @@ public class Product
     public string? SubmitDate { get; set; }
     public bool RequestForDeletion { get; set; }
     public string? QrCode { get; set; }
+    public decimal ApprovedAmount { get; set; }
     public int UserId { get; set; }
     public User? User { get; set; }
 }

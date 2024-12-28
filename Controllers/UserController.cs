@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BillTracker.Controllers;
 
-[Authorize]
+[Authorize(Roles = "User")]
 [Route("[controller]")]
 public class UserController : Controller
 {

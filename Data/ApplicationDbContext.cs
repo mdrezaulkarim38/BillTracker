@@ -17,6 +17,9 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Product>()
             .Property(p => p.BillAmount)
-            .HasPrecision(18, 2); // Precision 18, scale 2
+            .HasPrecision(18, 2);
+        modelBuilder.Entity<Product>()
+            .Property(p => p.ApprovedAmount)
+            .HasPrecision(18, 2);
     }
 }

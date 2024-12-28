@@ -8,4 +8,7 @@ public interface IAdminService
     Task ToggleUserStatus(int userId);
     Task<EditUserViewModel> GetEditData(int userId);
     Task EditUserSave(EditUserViewModel model);
+    Task<IEnumerable<Product>> GetAllProducts();
+    bool DeleteProduct(int productId);
+    Task ApprovedProduct(int productId, decimal approvedAmount);
 }
