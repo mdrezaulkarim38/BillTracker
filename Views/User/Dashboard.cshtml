@@ -24,6 +24,7 @@
             <th>Challan Date</th>
             <th>Bill Amount</th>
             <th>Submit Date</th>
+            <th>QR Code</th>
             <th>Status</th>
             <th>Delete Request</th>
         </tr>
@@ -32,7 +33,7 @@
         @if (!Model.Any())
         {
             <tr>
-                <td colspan="11" class="text-center">No Product found.</td>
+                <td colspan="12" class="text-center">No Product found.</td>
             </tr>
         }
         else
@@ -50,6 +51,21 @@
                     <td>@product.ChallanDate</td>
                     <td>@product.BillAmount</td>
                     <td>@product.SubmitDate</td>
+                    <td>
+                        <div id="qrCodeContainer-@product.Id"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const qrData = `@product.QrCode`;
+                                QRCode.toDataURL(qrData, { width: 100 }, function (err, url) {
+                                    if (err) {
+                                        console.error("Error generating QR code:", err);
+                                        return;
+                                    }
+                                    document.getElementById("qrCodeContainer-@product.Id").innerHTML = `<img src="${url}" alt="QR Code" />`;
+                                });
+                            });
+                        </script>
+                    </td>
                     <td>
                         @if (product.Status)
                         {
@@ -82,3 +98,11 @@
         </tbody>
     </table>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}

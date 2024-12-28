@@ -2,27 +2,44 @@ using BillTracker.Data;
 using BillTracker.Models;
 using BillTracker.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using BillTracker.Services;
 namespace BillTracker.Services;
-
-
 public class UserService : IUserService
 {
     private readonly ApplicationDbContext _context;
-
+    private readonly BaseService _baseService;
     public UserService(ApplicationDbContext context)
     {
         _context = context;
+        _baseService = new BaseService();
     }
 
     public async Task SaveProduct(Product product)
     {
+        if (product.QrCode != null)
+        {
+            string qrCode = product.QrCode;
+            product.QrCode = _baseService.Encrypt(qrCode);
+        }
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Product>> GetAllProducts(int userId)
     {
-        return await _context.Products.Where(product => product.UserId == userId).ToListAsync(); 
+        var products = await _context.Products
+            .Where(product => product.UserId == userId)
+            .ToListAsync();
+
+        foreach (var product in products)
+        {
+            if (!string.IsNullOrEmpty(product.QrCode))
+            {
+                product.QrCode = _baseService.Decrypt(product.QrCode);
+            }
+        }
+
+        return products;
     }
     public async Task DeleteRequest(int id)
     {

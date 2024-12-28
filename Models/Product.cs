@@ -18,5 +18,5 @@ public class Product
     public bool RequestForDeletion { get; set; }
     public string? QrCode { get; set; }
     public int UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 }
