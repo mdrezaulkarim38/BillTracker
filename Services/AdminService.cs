@@ -19,11 +19,12 @@ public class AdminService : IAdminService
 
     public async Task AddUser(AddUserViewModel model)
     {
+        string password = _baseService.Encrypt(model.Password);
         var user = new User
         {
             FullName = model.FullName,
             Email = model.Email,
-            Password = model.Password,
+            Password = password,
             IsAdmin = model.IsAdmin
         };
 
@@ -53,12 +54,13 @@ public class AdminService : IAdminService
         {
             throw new KeyNotFoundException("User not found");
         }
+        string password = _baseService.Decrypt(user.Password);
         var model = new EditUserViewModel
         {
             Id = user.Id,
             FullName = user.FullName!,
             Email = user.Email!,
-            Password = user.Password,
+            Password = password,
             IsAdmin = user.IsAdmin,
             IsActive = user.IsActive
         };
@@ -79,7 +81,8 @@ public class AdminService : IAdminService
         
         if (!string.IsNullOrWhiteSpace(model.Password))
         {
-            user.Password = model.Password; 
+            string password = _baseService.Encrypt(model.Password);
+            user.Password = password; 
         }
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
