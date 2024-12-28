@@ -50,14 +50,37 @@
                     <td>@product.ChallanDate</td>
                     <td>@product.BillAmount</td>
                     <td>@product.SubmitDate</td>
-                    <td>@product.Status</td>
                     <td>
-                        <form asp-action="DeleteRequest" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@product.Id" />
-                            <button type="submit" class="btn btn-sm @((product.RequestForDeletion ? "btn-danger" : "btn-success"))">
-                                @(product.RequestForDeletion ? "Deactivate" : "Activate")
-                            </button>
-                        </form>
+                        @if (product.Status)
+                        {
+                            <span class="badge bg-success">Pass</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Waiting For Approve</span>
+                        }
+                    </td>
+                    <td>
+                        @if (product.Status)
+                        {
+                            <span class="badge bg-success"></span>
+                        }
+                        else
+                        {
+                            if (product.RequestForDeletion)
+                            {
+                                
+                            }
+                            else
+                            {
+                                <form asp-action="DeleteRequest" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@product.Id"/>
+                                    <button type="submit" class="btn btn-sm @((product.RequestForDeletion ? "btn-danger" : "btn-success"))">
+                                        @(product.RequestForDeletion ? "Wating" : "Delete")
+                                    </button>
+                                </form>
+                            }
+                        }
                     </td>
                 </tr>
                 index++;
