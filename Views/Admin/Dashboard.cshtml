@@ -16,7 +16,6 @@
             <th>Bill No</th>
             <th>Bill Date</th>
             <th>Bill Amount</th>
-            <th>Status</th>
             <th>Submit Date</th>
             <th>Submit By</th>
             <th>QR Code</th>
@@ -41,7 +40,7 @@
                     <td>@product.BillNo</td>
                     <td>@product.BillDate</td>
                     <td>@product.BillAmount</td>
-                    <td>@product.Status</td>
+               
                     <td>@product.SubmitDate</td>
                     <td>@product.User!.FullName</td>
                     <td>
@@ -112,6 +111,7 @@
                         }
                     </td>
                 </tr>
+index++;
             }
         }
         </tbody>
